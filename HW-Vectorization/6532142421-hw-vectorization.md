@@ -1,6 +1,49 @@
+# Exercise I
+
+Design an experiment to measure the speed up of this vectorize code.
+
+```c
+// No AVX
+void add(int size, int *a,int *b) {
+    for (int i=0;i<size;i++) {
+        a[i] += b[i];
+    }
+}
+```
+
+```c
+// with AVX2
+void add_avx(int size, int *a, int*b) {
+    int i=0;
+    for (;i<size;i+=8) {
+        // load 256-bit chunks of each array
+        __m256i av = _mm256_loadu_si256((__m256i*) &a[i]);
+        __m256i bv = _mm256_loadu_si256((__m256i*) &b[i]);
+        // add each pair of 32-bit integers in chunks
+        av = _mm256_add_epi32(av, bv);
+        // store 256-bit chunk to a
+        _mm256_storeu_si256((__m256i*) &a[i], av);
+    }
+    // clean up
+    for(;i<size;i++) {
+        a[i] += b[i];
+    }
+}
+```
+
+## Solution
+
+- Chip: Apple M2
+- SIMD: ARM NEON
+- Array Size: 10M elements (40MB)
+- Iterations: 100 iterations/run
+- Runs: 3 runs
+- Compiler: `clang` with `-O3 -arch arm64 -fno-vectorize`
+
+```c
+#include <arm_neon.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <arm_neon.h>
 #include <mach/mach_time.h>
 
 // Scalar (non-vectorized) version
@@ -112,3 +155,34 @@ int main() {
     free(a_backup);
     return 0;
 }
+```
+
+```bash
+clang -O3 -arch arm64 -fno-vectorize -o ex1 ex1.c
+./ex1
+```
+
+```
+Benchmark Results (10M elements, 100 iterations/run):
+Run 1: Scalar=4.79 ms, NEON=1.82 ms, Speedup=2.64x
+Run 2: Scalar=4.75 ms, NEON=1.57 ms, Speedup=3.02x
+Run 3: Scalar=4.76 ms, NEON=1.58 ms, Speedup=3.02x
+
+Average across 3 runs:
+Scalar: 4.76 ms
+NEON:   1.65 ms
+Speedup: 2.88x
+```
+
+### Conclusion
+The vectorized implementation using ARM NEON SIMD instructions demonstrated a significant performance improvement over the scalar implementation, achieving an average speedup of 2.88x.
+
+# Exercise II
+
+Design an experiment to measure the speed up of this in numpy (and cupy it you have a GPU)
+
+# Exercise III
+
+While vectorization is powerful, please explain a situation when it may not be beneficial.
+Hint 1 - Compiler support
+Hint 2 - Vectorizability of Software
