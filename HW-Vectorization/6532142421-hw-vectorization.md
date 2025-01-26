@@ -39,6 +39,7 @@ void add_avx(int size, int *a, int*b) {
 - Iterations: 100 iterations/run
 - Runs: 3 runs
 - Compiler: `clang` with `-O3 -arch arm64 -fno-vectorize`
+    - `-fno-vectorize` flag is used to disable auto-vectorization by the compiler. (if not disabled, the speedup will approximately be 0.95x)
 
 ```c
 #include <arm_neon.h>
@@ -181,8 +182,129 @@ The vectorized implementation using ARM NEON SIMD instructions demonstrated a si
 
 Design an experiment to measure the speed up of this in numpy (and cupy it you have a GPU)
 
+```python
+a=list(range(6400000))
+b=list(range(6400000))
+for i in range(size):
+    a[i]+=b[i]
+```
+
+```python
+import numpy as np
+na=np.random.randint(1,1000, 6400000)
+nb=np.random.randint(1,1000, 6400000)
+na+=nb
+```
+
+## Solution
+
+Setup of experiment is in `config`.
+
+```python
+import timeit
+import numpy as np
+import sys
+
+def main():
+    # Benchmark configuration
+    config = {
+        'size': 6_400_000,      # Number of elements
+        'dtype': np.int64,      # Data type
+        'repeats': 5,           # Number of benchmark repeats
+        'numpy_iterations': 1000,  # Iterations per numpy run
+        'random_seed': 42       # For reproducibility
+    }
+
+    # System information
+    print(f"Python {sys.version}\nNumPy {np.__version__}")
+    print(f"Benchmarking {config['size']:,} elements ({config['dtype'].__name__})")
+
+    # Initialize data with fixed seed
+    np.random.seed(config['random_seed'])
+    a_np = np.random.randint(1, 1000, config['size'], dtype=config['dtype'])
+    b_np = np.random.randint(1, 1000, config['size'], dtype=config['dtype'])
+    a_list = a_np.tolist()
+    b_list = b_np.tolist()
+
+    # Benchmark 1: Python list iteration
+    list_times = timeit.repeat(
+        stmt='for i in range(len(a)): a[i] += b[i]',
+        setup='a = list_a.copy(); b = list_b.copy()',
+        globals={'list_a': a_list, 'list_b': b_list},
+        number=1,
+        repeat=config['repeats']
+    )
+
+    # Benchmark 2: NumPy vectorized operation
+    numpy_times = timeit.repeat(
+        stmt='a += b',
+        setup='a = np_a.copy(); b = np_b.copy()',
+        globals={'np_a': a_np, 'np_b': b_np},
+        number=config['numpy_iterations'],
+        repeat=config['repeats']
+    )
+
+    # Calculate statistics
+    avg_list_ms = (sum(list_times) / len(list_times)) * 1000  # Convert s to ms
+    avg_numpy_ms = (sum(numpy_times) / (len(numpy_times) * config['numpy_iterations'])) * 1000
+    speedup = avg_list_ms / avg_numpy_ms
+
+    # Print results
+    print("\nBenchmark Results (milliseconds):")
+    print(f"{'Run':<5} {'List time (ms)':<15} {'NumPy time (ms)':<15}")
+    for i, (lt, nt) in enumerate(zip(list_times, numpy_times)):
+        list_ms = lt * 1000
+        numpy_ms = (nt / config['numpy_iterations']) * 1000
+        print(f"{i+1:<5} {list_ms:<15.3f} {numpy_ms:<15.3f}")
+
+    print("\nSummary:")
+    print(f"Average List Time:    {avg_list_ms:.3f} ms")
+    print(f"Average NumPy Time:   {avg_numpy_ms:.3f} ms")
+    print(f"Speedup Factor:       {speedup:,.0f}x")
+
+if __name__ == '__main__':
+    main()
+```
+
+```
+Python 3.11.11 (main, Dec 11 2024, 10:25:04) [Clang 14.0.6 ]
+NumPy 1.26.4
+Benchmarking 6,400,000 elements (int64)
+
+Benchmark Results (milliseconds):
+Run   List time (ms)  NumPy time (ms)
+1     265.813         2.723
+2     201.187         2.739
+3     198.033         2.762
+4     197.740         2.826
+5     197.282         2.710
+
+Summary:
+Average List Time:    212.011 ms
+Average NumPy Time:   2.752 ms
+Speedup Factor:       77x
+```
+
+### Conclusion
+
+The NumPy vectorized operation demonstrated a significant performance improvement over the Python list iteration, achieving an average speedup factor of 77x. This highlights the efficiency of vectorized operations in NumPy for element-wise array computations.
+
 # Exercise III
 
-While vectorization is powerful, please explain a situation when it may not be beneficial.
-Hint 1 - Compiler support
+While vectorization is powerful, please explain a situation when it may not be beneficial.\
+Hint 1 - Compiler support\
 Hint 2 - Vectorizability of Software
+
+## Solution
+
+Vectorization may not always provide performance benefits, especially in the following scenarios:
+
+1. **Lack of Compiler Support**: If the target platform's compiler lacks robust support for vectorization or SIMD instructions (e.g., ARM NEON, AVX), the code may not benefit from vectorization. This is particularly true for older compilers or architectures that do not support the necessary instruction sets.
+
+2. **Non-Vectorizable Code**: Certain algorithms inherently cannot be vectorized due to dependencies between iterations, such as recursive computations, dynamic memory access patterns, or irregular data structures (e.g., linked lists). In such cases, vectorized instructions cannot be applied effectively, and scalar operations remain more suitable.
+
+3. **Small Data Sizes**: When the input data is too small, the overhead of setting up vectorized operations can outweigh the performance gains, making scalar operations faster.
+
+4. **Memory Alignment**: Vectorized instructions often require data to be aligned in memory for optimal performance. Misaligned or fragmented data can lead to penalties, negating the benefits of vectorization.
+
+5. **Branching Code**: Code with heavy branching (e.g., conditional statements inside loops) can disrupt vectorization, as SIMD instructions operate on uniform sets of data. Divergent execution paths hinder parallelism and reduce the effectiveness of vectorized instructions.
