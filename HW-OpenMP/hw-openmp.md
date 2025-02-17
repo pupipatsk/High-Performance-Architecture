@@ -33,58 +33,94 @@ return 0;
 
 ## Answer
 
+Experiment setup:
+
+- Iterations: 3
+- Array Sizes
+  - SIZE1 = 100000 / 100
+  - SIZE2 = 100000 (default)
+  - SIZE3 = 100000 * 100
+
 ```c
 #include <stdio.h>
+#include <stdlib.h>
 #include <omp.h>
 
-#define SIZE 100000
+#define ITERATIONS 3  // Number of times to run each test
+#define SIZE1 100000 / 100
+#define SIZE2 100000 // Default size
+#define SIZE3 100000 * 100
 
-void serial_version(double *serial_time) {
-    int a[SIZE];
+void serial_version(int size, double *serial_time) {
+    int *a = (int*)malloc(size * sizeof(int)); // Allocate memory for large arrays
+    if (!a) {
+        printf("Memory allocation failed for size %d\n", size);
+        exit(1);
+    }
+
     double start_time = omp_get_wtime();
-
-    for (int i = 0; i < SIZE; i++) {
+    for (int i = 0; i < size; i++) {
         a[i] = 2 * i + i; // Computes 3*i
     }
-
     double end_time = omp_get_wtime();
-    *serial_time = end_time - start_time;
-    printf("Serial Execution Time: %f seconds\n", *serial_time);
+
+    *serial_time = (end_time - start_time) * 1000.0; // Convert to milliseconds
+    free(a); // Free memory
 }
 
-void parallel_version(double *parallel_time) {
-    int a[SIZE];
-    double start_time = omp_get_wtime();
-
-    #pragma omp parallel for
-    for (int i = 0; i < SIZE; i++) {
-        a[i] = 2 * i + i;
+void parallel_version(int size, double *parallel_time) {
+    int *a = (int*)malloc(size * sizeof(int)); // Allocate memory for large arrays
+    if (!a) {
+        printf("Memory allocation failed for size %d\n", size);
+        exit(1);
     }
 
+    double start_time = omp_get_wtime();
+    #pragma omp parallel for
+    for (int i = 0; i < size; i++) {
+        a[i] = 2 * i + i;
+    }
     double end_time = omp_get_wtime();
-    *parallel_time = end_time - start_time;
-    printf("Parallel Execution Time: %f seconds\n", *parallel_time);
+
+    *parallel_time = (end_time - start_time) * 1000.0; // Convert to milliseconds
+    free(a); // Free memory
+}
+
+void run_test(int size) {
+    printf("\n=== Testing with SIZE = %d ===\n", size);
+
+    double total_serial = 0.0, total_parallel = 0.0;
+
+    for (int i = 0; i < ITERATIONS; i++) {
+        double serial_time, parallel_time;
+
+        serial_version(size, &serial_time);
+        parallel_version(size, &parallel_time);
+
+        total_serial += serial_time;
+        total_parallel += parallel_time;
+
+        printf("  Iteration %d: Serial = %.3f ms, Parallel = %.3f ms, Speedup = %.2fX\n",
+               i + 1, serial_time, parallel_time, serial_time / parallel_time);
+    }
+
+    double avg_serial = total_serial / ITERATIONS;
+    double avg_parallel = total_parallel / ITERATIONS;
+    double avg_speedup = avg_serial / avg_parallel;
+
+    printf("\n  >>> AVERAGE RESULTS for SIZE = %d <<<\n", size);
+    printf("  Avg Serial Time: %.3f ms\n", avg_serial);
+    printf("  Avg Parallel Time: %.3f ms\n", avg_parallel);
+    printf("  Avg Speedup: %.2fX\n", avg_speedup);
 }
 
 int main(void) {
     int num_cores = omp_get_num_procs();
     printf("Number of CPU cores: %d\n", num_cores);
 
-    double serial_time, parallel_time;
-
-    printf("\nRunning Serial Version...\n");
-    serial_version(&serial_time);
-
-    printf("\nRunning Parallel Version...\n");
-    parallel_version(&parallel_time);
-
-    // Compute and print speedup
-    if (parallel_time > 0) {
-        double speedup = serial_time / parallel_time;
-        printf("\nSpeedup: %.2fX\n", speedup);
-    } else {
-        printf("\nParallel execution time too small to compute speedup accurately.\n");
-    }
+    run_test(SIZE1);
+    run_test(SIZE2);
+    run_test(SIZE3);
 
     return 0;
 }
@@ -100,14 +136,40 @@ Results:
 ```
 Number of CPU cores: 8
 
-Running Serial Version...
-Serial Execution Time: 0.000661 seconds
+=== Testing with SIZE = 1000 ===
+  Iteration 1: Serial = 0.005 ms, Parallel = 0.194 ms, Speedup = 0.03X
+  Iteration 2: Serial = 0.005 ms, Parallel = 0.067 ms, Speedup = 0.07X
+  Iteration 3: Serial = 0.005 ms, Parallel = 0.071 ms, Speedup = 0.07X
 
-Running Parallel Version...
-Parallel Execution Time: 0.000341 seconds
+  >>> AVERAGE RESULTS for SIZE = 1000 <<<
+  Avg Serial Time: 0.005 ms
+  Avg Parallel Time: 0.111 ms
+  Avg Speedup: 0.05X
 
-Speedup: 1.94X
+=== Testing with SIZE = 100000 ===
+  Iteration 1: Serial = 0.508 ms, Parallel = 0.319 ms, Speedup = 1.59X
+  Iteration 2: Serial = 0.502 ms, Parallel = 0.230 ms, Speedup = 2.18X
+  Iteration 3: Serial = 0.502 ms, Parallel = 0.229 ms, Speedup = 2.19X
+
+  >>> AVERAGE RESULTS for SIZE = 100000 <<<
+  Avg Serial Time: 0.504 ms
+  Avg Parallel Time: 0.259 ms
+  Avg Speedup: 1.94X
+
+=== Testing with SIZE = 10000000 ===
+  Iteration 1: Serial = 45.918 ms, Parallel = 4.953 ms, Speedup = 9.27X
+  Iteration 2: Serial = 27.811 ms, Parallel = 5.230 ms, Speedup = 5.32X
+  Iteration 3: Serial = 23.906 ms, Parallel = 5.426 ms, Speedup = 4.41X
+
+  >>> AVERAGE RESULTS for SIZE = 10000000 <<<
+  Avg Serial Time: 32.545 ms
+  Avg Parallel Time: 5.203 ms
+  Avg Speedup: 6.26X
 ```
+
+### Conclusion
+
+The experiment demonstrates that OpenMP parallelization significantly improves performance for **large workloads** but introduces **overhead** for small tasks.
 
 # Question 3
 
