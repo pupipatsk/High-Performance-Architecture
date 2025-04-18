@@ -1,0 +1,19 @@
+# Dockerfile-cpp
+# Docker-Image: power-plant-solver
+FROM gcc:12
+
+# Install OpenMP support
+# RUN apt-get update && apt-get install -y libgomp1
+
+# Build-time argument for dummy compilation (used just to pull image)
+ARG SOLVER=dummy.cpp
+
+# Set working directory
+WORKDIR /app
+COPY cpp-solver/ /app/
+COPY compile-cpp.sh /app/
+
+# Dummy compile to validate Dockerfile works (actual compilation done outside)
+RUN echo "// dummy" > dummy.cpp && g++ -O3 dummy.cpp -o dummy || true
+
+ENTRYPOINT ["/bin/bash"]

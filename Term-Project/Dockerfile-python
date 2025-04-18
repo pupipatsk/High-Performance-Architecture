@@ -1,0 +1,15 @@
+# Dockerfile-python
+
+FROM python:3.9-slim
+
+# Install required packages
+RUN pip install --no-cache-dir bitarray
+
+# Set workdir
+WORKDIR /app
+
+# Copy all python solvers
+COPY python-solver/ /app/
+
+# Use ENTRYPOINT for runtime arguments: script name, input, output
+ENTRYPOINT ["python3"]

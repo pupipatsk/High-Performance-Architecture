@@ -1,0 +1,100 @@
+# High Performance Computing Term Project
+
+**Course:** 2110452 - High Performance Computing
+**Instructor:** Krerk Piromsopa, Ph.D.
+
+---
+
+## Term Project: Power Plant Placement Problem (40 points)
+
+You are asked to solve the **Power Plant placing problem**, a variation of the **vertex coverage problem**, which is known to be **NP-Complete**.
+Technically, it is much closer to the **Minimum Dominating Set Problem**.
+
+Assumptions:
+- A power plant can be installed in any city.
+- A city with a power plant can **only power itself and adjacent cities** (connected via edges).
+
+### Goal:
+Find a **minimal solution** for cities with power plants installed, such that **all cities receive power**.
+
+---
+
+## Input File Format
+
+Each input file contains:
+1. The number of nodes (cities) — first line
+2. The number of edges — second line
+3. A list of edges — subsequent lines (each line represents a connection between two cities)
+
+### Example Input
+```
+6
+7
+2 4
+4 1
+2 0
+0 3
+4 3
+3 5
+1 5
+```
+
+---
+
+## Output File Format
+
+The output file contains a **binary string** of `1`s and `0`s:
+- `1` → city has a power plant
+- `0` → city does not have a power plant
+
+You may output multiple lines, but **only the last line** will be used for validation.
+
+### Example Output
+```
+000110
+```
+
+---
+
+## Grading
+
+### 30 Points - Correctness & Runtime
+- Your program will be tested against **at least 15 input sets**.
+- For each **correct output within 3 minutes** → **2 points**
+- For correct output **over 3 minutes** → **1 point**
+- Overall execution must **not exceed 5 minutes**
+
+### 10 Points - Ranking Score
+- One input set will be used as a **benchmark**.
+- Your program will be run **5 times**, and the **average time** will be used.
+- Only correct solutions are ranked.
+
+| Ranking | Points |
+|---------|--------|
+| Top 5   | 10     |
+| Next 5  | 8      |
+| Others  | 5      |
+
+### Bonus: 10 Points
+- If your program beats the instructor’s average time on the benchmark, you get an **extra 10 points**.
+
+---
+
+## Submission Instructions
+
+1. Create a **container image** and publish it on a public repository (e.g., GitLab or Docker Hub).
+2. Submit only the **image repository URL**.
+3. The instructor (or a grading bot) will pull and grade your image.
+
+### Run Command Format
+```bash
+$ time docker run -v data/input:/input  -v data/output:/output [your-docker-image] /input/grid-6-7.txt /output/grid-6-7.out
+```
+
+---
+
+## Grading Machine Specs (Tentative)
+
+- **CPU:** AMD Ryzen 5 2600 (6 cores × 2 threads/core = 12 threads)
+- **RAM:** 16GB
+- **Storage:** SSD (solid state drive)
