@@ -1,8 +1,14 @@
-# Docker-Image-name: power-plant-solver
-FROM gcc:12
-RUN apt-get update && apt-get install -y libgomp1
+# Use official GCC image
+FROM gcc:13.1.0
+
+# Set working directory
 WORKDIR /app
-COPY cpp-solver/ /app/cpp-solver/
-COPY compile-cpp.sh /app/
-RUN chmod +x compile-cpp.sh && ./compile-cpp.sh cpp-solver /app/bin
-ENTRYPOINT ["/bin/bash"]
+
+# Copy your source file into the container
+COPY main-solver.cpp ./solver.cpp
+
+# Compile the solver with full optimization
+RUN g++ -O3 -march=native -funroll-loops -std=c++17 solver.cpp -o solver
+
+# Entry point matches grading system expectations
+ENTRYPOINT ["./solver"]
