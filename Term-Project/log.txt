@@ -27,3 +27,104 @@ cpp-2025-04-18-2300-solve-greedy-vector-dynamic: Run 5/5 | Progress: 100% | Avg:
 cpp-2025-04-18-2300-solve-greedy-vector-dynamic: 230.805 ms | Accuracy: 100.00% (25/25)
 
 🥇 Best Solver (fastest per file): cpp-2025-04-18-2310-solve-greedy-bitset-dynamic (219.486 ms)
+
+
+----------
+🏆 Summary:
+ - cpp-2025-04-16-2300-solve-greedy-bitset: 11.511 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-16-2320-solve-greedy-vector: 11.552 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2300-solve-greedy-vector-dynamic: 11.463 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2310-solve-greedy-bitset-dynamic: 11.558 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2325-solve-3range-basic: 11.390 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-19-1503-3range-grok: 11.376 ms | Accuracy: 100.00% (305/305)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1503-3range-grok (11.376 ms)
+
+🏆 Summary:
+ - cpp-2025-04-16-2300-solve-greedy-bitset: 12.201 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-16-2320-solve-greedy-vector: 12.261 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2300-solve-greedy-vector-dynamic: 11.961 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2310-solve-greedy-bitset-dynamic: 12.013 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2325-solve-3range-basic: 11.893 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-19-1503-3range-grok: 12.253 ms | Accuracy: 100.00% (305/305)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-18-2325-solve-3range-basic (11.893 ms)
+
+🏆 Summary:
+ - cpp-2025-04-16-2300-solve-greedy-bitset: 11.517 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-16-2320-solve-greedy-vector: 11.471 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2300-solve-greedy-vector-dynamic: 11.758 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2310-solve-greedy-bitset-dynamic: 11.983 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-18-2325-solve-3range-basic: 12.040 ms | Accuracy: 100.00% (305/305)
+ - cpp-2025-04-19-1503-3range-grok: 12.194 ms | Accuracy: 100.00% (305/305)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-16-2320-solve-greedy-vector (11.471 ms)
+
+
+----------
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 62.928 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 55.271 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1503-3range-grok (55.271 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 54.099 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 54.591 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-18-2325-solve-3range-basic (54.099 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 54.284 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 54.633 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-18-2325-solve-3range-basic (54.284 ms)
+
+
+----------
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 58.530 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 59.810 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 44.160 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1547-3range-o4minihigh (44.160 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 57.444 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 55.045 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 41.423 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1547-3range-o4minihigh (41.423 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 54.013 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 54.849 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 41.904 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1547-3range-o4minihigh (41.904 ms)
+
+
+----------
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 58.956 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 59.095 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 46.239 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1555-3range-o4minihigh-2: 21.969 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1555-3range-o4minihigh-2 (21.969 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 57.807 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 58.730 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 44.491 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1555-3range-o4minihigh-2: 21.171 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1555-3range-o4minihigh-2 (21.171 ms)
+
+🏆 Summary:
+ - cpp-2025-04-18-2325-solve-3range-basic: 59.296 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1503-3range-grok: 58.455 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1547-3range-o4minihigh: 44.413 ms | Accuracy: 100.00% (155/155)
+ - cpp-2025-04-19-1555-3range-o4minihigh-2: 20.966 ms | Accuracy: 100.00% (155/155)
+
+🥇 Best Solver (fastest per file): cpp-2025-04-19-1555-3range-o4minihigh-2 (20.966 ms)
