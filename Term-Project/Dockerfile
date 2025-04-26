@@ -1,23 +1,22 @@
 FROM ubuntu:22.04
 
-# Install build tools
-RUN apt-get update && apt-get install -y g++ cmake git wget unzip python3
+RUN apt-get update && apt-get install -y g++ cmake
 
-# Copy OR-Tools source
 WORKDIR /opt
-COPY or-tools-stable /opt/or-tools
 
-# Build OR-Tools
-WORKDIR /opt/or-tools
-RUN cmake -S . -B build -DBUILD_DEPS=ON
-RUN cmake --build build --parallel
+COPY or-tools_amd64_ubuntu-22.04_cpp_v9.11.4210.tar.gz .
 
-# Copy your C++ code
+RUN tar -xzf or-tools_amd64_ubuntu-22.04_cpp_v9.11.4210.tar.gz
+RUN mkdir /opt/ortools
+RUN mv or-tools_*/* /opt/ortools/
+RUN rm or-tools_amd64_ubuntu-22.04_cpp_v9.11.4210.tar.gz
+
+ENV LD_LIBRARY_PATH="/opt/ortools/lib:${LD_LIBRARY_PATH}"
+
 WORKDIR /app
 COPY solve.cpp .
 
-# Compile linking against static library
-RUN g++ solve.cpp /opt/or-tools/build/libortools.a -std=c++17 -I/opt/or-tools/build -I/opt/or-tools/include -lpthread -o solver
+RUN g++ solve.cpp -std=c++17 -O3 -march=native -funroll-loops -flto -fomit-frame-pointer \
+    -I/opt/ortools/include -L/opt/ortools/lib -lortools -lpthread -o solver
 
-# Set entrypoint
 ENTRYPOINT ["./solver"]
